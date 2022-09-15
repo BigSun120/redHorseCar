@@ -1,0 +1,17 @@
+@import 'antd/dist/antd.css';
+@import './nav.less';
+
+body {
+  background-color: skyblue;
+}
+
+
+* {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.vh100 {
+  height: 100vh;
+}
