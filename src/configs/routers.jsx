@@ -1,18 +1,21 @@
 import { Routes, Route } from 'react-router-dom';
 import { routersApi } from '../apis/user'
 import React from 'react';
+import ReactDOM from 'react-dom/client'
+
+import homeImg from '../assets/images/icons/home.png'
 
 const Login = React.lazy(() => import('../pages/Login'))
 const Reg = React.lazy(() => import('../pages/Reg'))
-const NavPage = React.lazy(() => import('../pages/navPage/NavPage'))
+const NavPage = React.lazy(() => import('../pages/homePageView/HomePageView'))
 // const Home = React.lazy(() => import('../pages/home/Home'))
 const NotFound = React.lazy(() => import('../pages/NotFound'))
 
 import Home from '../pages/home/Home';
-import User from '../pages/system/user';
-import Role from '../pages/system/role';
-import Menu from '../pages/system/menu';
-import Dict from '../pages/system/dict';
+import User from '../pages/system/User';
+import Role from '../pages/system/Role';
+import Menu from '../pages/system/Menu';
+import Dict from '../pages/system/Dict';
 
 export const routers = [
   // {
@@ -49,23 +52,19 @@ export const routers = [
     element: NavPage,
     children: [
       {
-        path: '/system/user',
-        index: true,
-        element: React.lazy(() => import('../pages/system/user'))
+        path: 'user',
+        element: User
       },
       {
-        path: '/system/role',
-        index: true,
-        element: React.lazy(() => import('../pages/system/role'))
+        path: 'role',
+        element: Role
       },
       {
-        path: '/system/menu',
-        index: true,
+        path: 'menu',
         element: Menu
       },
       {
-        path: '/system/dict',
-        index: true,
+        path: 'dict',
         element: Dict
       },
     ]
@@ -73,7 +72,9 @@ export const routers = [
 ]
 
 // getRouters()
-// export async function getRouters() {
+
+// // 获取用户信息
+// export async function getUserMsg() {
 //   const { username } = JSON.parse(localStorage.user)
 //   const data = await routersApi(username);
 //   routers = data[0]
@@ -81,6 +82,7 @@ export const routers = [
 //   console.log('getRouters', routers);
 //   return routers
 // }
+
 export async function getRoutersAside() {
   const { username } = JSON.parse(localStorage.user)
   const data = await routersApi(username);
@@ -95,9 +97,14 @@ function formatMenus(arr) {
       key: item.path,
       label: item.name,
       title: item.name,
+      icon: <> </>
     };
     if (item.children) {
       o.children = formatMenus(item.children)
+    }
+    if (item.icon) {
+      // console.log(6666, item);
+      o.icon = <i className={"iconfont icon-" + item.icon} style={{ width: 20 }} alt="" />
     }
     return o;
   })

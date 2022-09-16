@@ -6,7 +6,7 @@ import { routers } from './configs/routers';
 
 const Login = React.lazy(() => import('./pages/Login'))
 const Reg = React.lazy(() => import('./pages/Reg'))
-const NavPage = React.lazy(() => import('./pages/navPage/NavPage'))
+const NavPage = React.lazy(() => import('./pages/homePageView/HomePageView'))
 // const User = React.lazy(() => import('./pages/system/user'))
 
 const App: FC = () => {

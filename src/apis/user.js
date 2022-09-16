@@ -20,3 +20,11 @@ export const routersApi = (query) => {
   return request(`/menu/${query}`)
 }
 
+// 获取用户信息
+export const getUserMsg = () => {
+  return request(`/user`)
+  // const { username } = JSON.parse(localStorage.user)
+  // if (username) {
+  //   return routersApi(username);
+  // }
+}

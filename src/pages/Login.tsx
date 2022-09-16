@@ -4,6 +4,9 @@ import { Button, message, Form, Input } from 'antd';
 import { NavLink } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 
+import * as user from '../store/modules/user'
+import { useSelector, useDispatch } from 'react-redux'
+
 import { loginApi } from '../apis/user';
 
 import '../assets/styles/logReg/log.less'
@@ -12,6 +15,7 @@ import '../assets/styles/logReg/log.less'
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // 登录跳转
   const onFinish = async (values: any) => {
@@ -29,6 +33,7 @@ export default function Login() {
       localStorage.permissions = JSON.stringify(data.permissions)
       localStorage.token = data.token
       localStorage.user = JSON.stringify(data.user)
+      dispatch(user.setUserMsg(data))
       message.success('登录成功！');
       // getRouters()
       navigate('/navPage');
