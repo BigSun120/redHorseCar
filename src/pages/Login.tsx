@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { loginApi } from '../apis/user';
 
 import '../assets/styles/logReg/log.less'
+// import { getRouters } from '../configs/routers';
+
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,11 +19,23 @@ export default function Login() {
     const { data } = await loginApi(values)
     console.log(data);
     if (data) {
+      // localStorage.setItem('config', JSON.stringify(data.config))
+      // localStorage.setItem('exipreTime', JSON.stringify(data.exipreTime))
+      // localStorage.setItem('permissions', JSON.stringify(data.permissions))
+      // localStorage.setItem('token', JSON.stringify(data.token))
+      // localStorage.setItem('user', JSON.stringify(data.user))
+      localStorage.config = JSON.stringify(data.config)
+      localStorage.exipreTime = JSON.stringify(data.exipreTime)
+      localStorage.permissions = JSON.stringify(data.permissions)
+      localStorage.token = data.token
+      localStorage.user = JSON.stringify(data.user)
       message.success('登录成功！');
-      navigate('/nav');
+      // getRouters()
+      navigate('/navPage');
     } else {
       message.error('认证失败！');
     }
+
   };
 
   return (
