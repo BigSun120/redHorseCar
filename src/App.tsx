@@ -40,13 +40,6 @@ const App: FC = () => {
           <Route path="/" element={<Navigate to="login" />}></Route>
           <Route path="/login" element={<Login />} />
           <Route path="/reg" element={<Reg />} />
-          {/* <Route path="/navPage" element={<NavPage />} > */}
-          {/* {
-              renderRoutes(routers)
-            } */}
-          {/* </Route> */}
-
-          {/* <Route path="/home" element={<Home />} /> */}
           {
             renderRoutes(routers)
           }

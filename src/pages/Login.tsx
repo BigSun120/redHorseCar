@@ -36,7 +36,8 @@ export default function Login() {
       dispatch(user.setUserMsg(data))
       message.success('登录成功！');
       // getRouters()
-      navigate('/navPage');
+      navigate('/home');
+      location.reload()
     } else {
       message.error('认证失败！');
     }
@@ -75,7 +76,10 @@ export default function Login() {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="login-form-button">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button">
             认 证 登 录
           </Button>
           <NavLink to="/reg">注册账户</NavLink>

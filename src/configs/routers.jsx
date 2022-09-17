@@ -12,10 +12,11 @@ const NavPage = React.lazy(() => import('../pages/homePageView/HomePageView'))
 const NotFound = React.lazy(() => import('../pages/NotFound'))
 
 import Home from '../pages/home/Home';
-import User from '../pages/system/User';
-import Role from '../pages/system/Role';
-import Menu from '../pages/system/Menu';
-import Dict from '../pages/system/Dict';
+import User from '../pages/system/user';
+import Role from '../pages/system/role';
+import Menu from '../pages/system/menu';
+import Dict from '../pages/system/dict';
+import Profile from '../pages/personal/Profile';
 
 export const routers = [
   // {
@@ -24,7 +25,7 @@ export const routers = [
   // },
   {
     path: '/navPage',
-    element: NavPage
+    element: NavPage,
   },
   {
     path: '*',
@@ -42,6 +43,7 @@ export const routers = [
     children: [
       {
         path: '/home',
+        index: true,
         element: Home,
       }
     ]
@@ -69,6 +71,16 @@ export const routers = [
       },
     ]
   },
+  {
+    path: '/profile',
+    element: NavPage,
+    children: [
+      {
+        path: '/profile',
+        element: Profile
+      }
+    ]
+  },
 ]
 
 // getRouters()
@@ -88,6 +100,7 @@ export async function getRoutersAside() {
   const data = await routersApi(username);
   // routers = data[0].children
   // console.log('getRoutersAside', data[0].children);
+  console.log('getRoutersAside', data);
   return formatMenus(data[0].children)
 }
 

@@ -16,6 +16,7 @@ export default function request(url, options = {}) {
             s = "username=admin&password=123"
          */
         options.body = s;
+        console.log('options.body', options.body);
     }
     if (options.query) {
         const query = options.query || {};
@@ -38,7 +39,7 @@ export default function request(url, options = {}) {
                     return response.json();
                 case 401:
                     localStorage.clear();
-                    // window.location.pathname = "/login";
+                    window.location.pathname = "/login";
                     // window.localStorage.hash = "#/login";
                     break;
                 default:

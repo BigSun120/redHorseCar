@@ -48,7 +48,7 @@ export default function HomePageView() {
       onClick={onClickUserMsg}
       items={[
         {
-          label: '个人中心',
+          label: <NavLink to={'/profile'}>个人中心</NavLink>,
           key: '1',
           // icon: 'require('../../states/images/icons/home')'
           icon: <i className='iconfont icon-smile'></i>
@@ -176,7 +176,7 @@ export default function HomePageView() {
           {Object.keys(breadcrumbs).map((a: any) => {
             if (a === pathname) {
               if (breadcrumbs[a].length > 1) {
-                console.log('breadcrumbs[a]', breadcrumbs[a]);
+                // console.log('breadcrumbs[a]', breadcrumbs[a]);
                 return <Breadcrumb key={a}>
                   {breadcrumbs[a].map((b: any) => {
                     return <Breadcrumb.Item key={b.title}>
