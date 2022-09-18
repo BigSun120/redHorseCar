@@ -1,9 +1,9 @@
 import { Button, Drawer, Space, Select, Radio, TreeSelect, Form, Input } from 'antd';
 import React, { useState, useForm, useEffect } from 'react'
 
-import { getDeptApi } from '../../../../apis/dept';
-import { addUserApi } from '../../../../apis/usersMsg';
-import { getRoleApi } from '../../../../apis/role';
+import { getDeptApi } from '../../../apis/dept';
+import { changeUserApi } from '../../../apis/usersMsg';
+import { getRoleApi } from '../../../apis/role';
 
 export default function DrawerBtn() {
 
@@ -11,7 +11,12 @@ export default function DrawerBtn() {
   const [role, setRole] = useState({})
   const [flg, setFlg] = useState(false)
 
+  const [form] = Form.useForm();
 
+  // 获取表单默认值
+  const userMsgs = JSON.parse(localStorage.user)
+  let { username, deptId, mobile, email, roleId, status, ssex, userId } = userMsgs
+  // roleId = roleId.split(',')
   // 获取部门
   async function getDept() {
     const data = await getDeptApi()
@@ -22,7 +27,6 @@ export default function DrawerBtn() {
     const data = await getRoleApi()
     setRole(data)
     setFlg(true)
-
   }
 
   // 进入
@@ -41,11 +45,10 @@ export default function DrawerBtn() {
 
 
   // 表单
-  const [form] = Form.useForm();
   // const form = Form.useFormInstance(); // x
   const onFinish = async (values) => {
     console.log('Success:', values);
-    const data = await addUserApi(values)
+    const data = await changeUserApi(values)
     console.log('onFinish-data', data);
     // form.resetFields();
   };
@@ -57,6 +60,7 @@ export default function DrawerBtn() {
   const showLargeDrawer = () => {
     setOpen(true);
   };
+
   // 新增
   const onClose = () => {
     setOpen(false);
@@ -89,11 +93,11 @@ export default function DrawerBtn() {
           type="primary"
           onClick={showLargeDrawer}
         >
-          新增用户
+          编辑资料
         </Button>
       </Space>
       <Drawer
-        title={'新增用户'}
+        title={'编辑资料'}
         placement="right"
         size='large'
         onClose={onClose}
@@ -102,7 +106,7 @@ export default function DrawerBtn() {
           <Space>
             <Button onClick={onClose}>取消</Button>
             <Button type="primary" onClick={onCloseAdd}>
-              新增
+              确认编辑
             </Button>
           </Space>
         }
@@ -112,10 +116,16 @@ export default function DrawerBtn() {
             width: "100%"
           }}
           form={form}
-          name="basic"
+          name="basic2"
           labelCol={{ span: 5, }}
           wrapperCol={{ span: 15, }}
-          initialValues={{ remember: true, size: 'large', }}
+          // 默认值
+          initialValues={{
+            remember: true, size: 'large',
+            username, email, userId,
+            mobile,
+            roleId, status, ssex, deptId
+          }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -134,25 +144,19 @@ export default function DrawerBtn() {
           </Form.Item>
 
           <Form.Item
-            label="密码"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: '请输入密码！',
-              },
-            ]}
-          >
-            <Input.Password />
-          </Form.Item>
-
-          <Form.Item
             label="邮箱"
             name="email"
-            value=''
             rules={[{ type: 'email', message: '请输入正确的邮箱！', },]}
           >
             <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="用户Id"
+            name="userId"
+
+          >
+            <Input disabled />
           </Form.Item>
 
           <Form.Item
@@ -171,7 +175,7 @@ export default function DrawerBtn() {
             />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label="角色"
             name="roleId"
             rules={[
@@ -192,7 +196,7 @@ export default function DrawerBtn() {
                 </Select.Option>
               })}
             </Select>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item
             label="部门"
@@ -207,7 +211,7 @@ export default function DrawerBtn() {
             />
           </Form.Item>
 
-          <Form.Item name="status" label="状态"
+          {/* <Form.Item name="status" label="状态"
             rules={[{
               required: true,
               message: '请选择状态！',
@@ -216,7 +220,7 @@ export default function DrawerBtn() {
               <Radio value="1">有效</Radio>
               <Radio value="0">锁定</Radio>
             </Radio.Group>
-          </Form.Item>
+          </Form.Item> */}
 
 
           <Form.Item name="ssex" label="性别"

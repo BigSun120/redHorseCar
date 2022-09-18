@@ -21,7 +21,7 @@ export default function Login() {
   const onFinish = async (values: any) => {
     console.log('Received values of form: ', values);
     const { data } = await loginApi(values)
-    console.log(data);
+    console.log('data', data);
     if (data) {
       // localStorage.setItem('config', JSON.stringify(data.config))
       // localStorage.setItem('exipreTime', JSON.stringify(data.exipreTime))

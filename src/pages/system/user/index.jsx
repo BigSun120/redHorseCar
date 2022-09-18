@@ -1,12 +1,18 @@
-import { Button, Form, Input, Select, DatePicker, Table, TreeSelect, Space, message } from 'antd';
+import { Button, Form, Popconfirm, Input, Select, DatePicker, Table, TreeSelect, Space, message, Tag } from 'antd';
 import { useEffect, useState } from 'react';
+import moment from 'moment';
+import { useRef } from 'react';
 
+import sets from '../../../assets/images/icons/sets.png'
+import view from '../../../assets/images/icons/view.png'
 import { getUsersApi, delUserApi } from '../../../apis/usersMsg';
 import { getDeptApi } from '../../../apis/dept';
-
-import moment from 'moment';
-
 import DrawerBtn from './components/DrawerBtn';
+import SetOptions from './components/SetOptions';
+
+import { useSelector, useDispatch } from 'react-redux'
+import user, * as userStore from '../../../store/modules/user'
+
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -17,12 +23,24 @@ const tailLayout = {
   },
 };
 
+// import { getDeptApi } from '../../../../apis/dept';
+// import { changeUserApi } from '../../../../apis/usersMsg';
+// import { getRoleApi } from '../../../../apis/role';
 
+// import sets from '../../../../assets/images/icons/sets.png'
+// import view from '../../../../assets/images/icons/view.png'
 
 
 
 const User = () => {
   const [form] = Form.useForm();
+
+  // store 状态机
+  const listStore = useSelector(state => state.user.userList)
+  const dispatch = useDispatch();
+
+  // 获取节点
+  const idRef = useRef('0');
 
   const [List, setList] = useState([]);
   const [total, setTotal] = useState(0);
@@ -34,9 +52,9 @@ const User = () => {
 
   async function getDept() {
     const data = await getDeptApi()
+    console.log('getDept()', data);
     setDept(data)
   }
-
   // 抽屉 
   const [open, setOpen] = useState(false);
   // 抽屉方法
@@ -48,21 +66,31 @@ const User = () => {
     setOpen(false);
   };
 
-  // 进入
-  useEffect(() => {
-    getDept()
-  }, [])
+
 
   // console.log('deptdept', dept);
   // 按钮开始 -- 删除 按钮
   const start = async () => {
+    // console.log('startstart', selectedRowKeys);
+    // const data = await delUserApi(selectedRowKeys)
+    // console.log('删除 按钮', data);
+    // message.success('删除成功')
+    // getList()
+  };
+
+  // 删除按钮 气泡确认
+  const confirm = async (e) => {
+    console.log(e);
     console.log('startstart', selectedRowKeys);
     const data = await delUserApi(selectedRowKeys)
     console.log('删除 按钮', data);
     message.success('删除成功')
     getList()
   };
-
+  const cancel = (e) => {
+    console.log(e);
+    message.info('取消删除成功！');
+  };
 
 
   // 点击了 多选框
@@ -83,6 +111,7 @@ const User = () => {
     const { total, rows } = await getUsersApi(body);
     // console.log('rowsrowsrows', rows);
     let list = rows.map(a => {
+      // console.log(a.createTimeFrom);
       let o = {};
       o['key'] = a.userId;
       o['username'] = a.username;
@@ -91,6 +120,13 @@ const User = () => {
       o['mobile'] = a.mobile;
       o['deptId'] = String(a.deptId);
       o['userId'] = a.userId;
+      o['ssex'] = a.ssex;
+      o['roleId'] = a.roleId;
+      // opations 
+      o['createTime'] = a.createTime;
+      o['status'] = String(a.status);
+      o['statusName'] = String(a.status) === 0 ? <Tag color='red'>无效</Tag> : <Tag color='green'>有效</Tag>;
+      o['opations'] = optionsRender(o);
       return o
     })
     console.log('list:', list);
@@ -100,7 +136,27 @@ const User = () => {
 
   useEffect(() => {
     getList()
+    getDept()
   }, [])
+
+  // function watchList() {
+  //   const idDiv = idRef.current.getAttribute('data-id')
+  //   console.log('idDiv:', idDiv);
+  // }
+  // 操作按钮 渲染
+  function optionsRender(userMsg) {
+    // console.log('userMsg', userMsg);
+    return <div>
+      {/* <div
+        ref={idRef}
+        data-id={userId}
+        onClick={watchList}> */}
+      <SetOptions userMsg={userMsg}></SetOptions>
+      {/* </div> */}
+      <img style={{ width: 20 }} src={view} alt="" />
+    </div>
+  }
+
 
   // 切换页码
   const onChange = (pagination, filters, sorter, extra) => {
@@ -113,18 +169,6 @@ const User = () => {
     {
       title: '用户名',
       dataIndex: 'username',
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
-      // onFilter: (value, record) => record.username.indexOf(value) === 0,
-      // onFilter: (value, record) => {
-      //   console.log('value, record', value, record);
-      // },
-
-      // sorter: (a, b) => a.username.length - b.name.length,
-      // sorter: (a, b) => {
-      //   return a.username.length - b.username.length
-      // },
-      // sortDirections: ['descend'],
     },
     {
       title: '邮箱',
@@ -135,28 +179,29 @@ const User = () => {
       title: '部门',
       dataIndex: 'deptName',
       filters: dept.rows?.children,
-      // [{
-      //   text: 'London',
-      //   value: 'London',
-      //   children: [
-      //     {
-      //       text: 'London1',
-      //       value: 'London1',
-      //     }
-      //   ]
-      // }, ],
-      onFilter: (value, record) => {
-        console.log('value', value);
-        console.log(' record', record.deptId);
-        // getList({ deptId: record.deptId, pageSize: '10', pageNum: '1' })
-        // return record?.dept?.indexOf(value) === 0
-        return value == record.deptId
-      },
+      onFilter: (value, record) => value == record.deptId,
     },
     {
       title: '电话',
       dataIndex: 'mobile',
       sorter: (a, b) => a.mobile > b.mobile
+    },
+    {
+      title: '状态',
+      dataIndex: 'statusName',
+      filters: [
+        { text: '有效', value: '有效' },
+        { text: '无效', value: '无效' },
+      ],
+      onFilter: (value, record) => value == record.statusName
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+    },
+    {
+      title: '操作',
+      dataIndex: 'opations',
     }
   ];
 
@@ -224,13 +269,22 @@ const User = () => {
           <DrawerBtn></DrawerBtn>
         </Space>
 
-        <Button
-          type="primary"
-          onClick={start}
-          disabled={!hasSelected}
+        <Popconfirm
+          title="确定要删除吗?"
+          onConfirm={confirm}
+          onCancel={cancel}
+          okText="是"
+          cancelText="否"
         >
-          删除
-        </Button>
+          <Button
+            type="primary"
+            onClick={start}
+            disabled={!hasSelected}
+          >
+            删除
+          </Button>
+        </Popconfirm>
+
       </div>
       {/* 表格  */}
       <Table

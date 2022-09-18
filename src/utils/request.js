@@ -35,7 +35,6 @@ export default function request(url, options = {}) {
         .then(response => {
             switch (response.status) {
                 case 200:
-
                     return response.json();
                 case 401:
                     localStorage.clear();

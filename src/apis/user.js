@@ -9,7 +9,7 @@ export const registApi = (body) => {
 
 export const loginApi = (body) => {
   return request('/login', {
-    method: 'POST',
+    method: 'post',
     body
   })
 }
@@ -22,8 +22,13 @@ export const routersApi = (query) => {
 // 获取用户信息
 export const getUserMsg = () => {
   return request(`/user`)
-  // const { username } = JSON.parse(localStorage.user)
-  // if (username) {
-  //   return routersApi(username);
-  // }
 }
+
+//  切换头像
+export const changeAvatarApi = (body) => {
+  return request('/user/avatar', {
+    method: 'PUT',
+    body
+  })
+}
+

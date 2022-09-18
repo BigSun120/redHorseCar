@@ -1,3 +1,4 @@
+import { message } from "antd";
 import request from "../utils/request";
 
 // 获取用户数据
@@ -37,5 +38,6 @@ export const addUserApi = (body) => {
 
 // 根据用户 ID 删除用户
 export const delUserApi = (userId) => {
-  return request(`/user/${userId}`, { method: 'delete' })
+  message.success('假装删除成功')
+  // return request(`/user/${userId}`, { method: 'delete' })
 }

@@ -1,7 +1,11 @@
 
-import { Card } from 'antd';
+import { Card, message } from 'antd';
 import { Col, Row, Button, Modal, Tabs } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { houTian, ali, face } from '../../assets/images/avator/houtianhuazi';
+import { changeAvatarApi } from '../../apis/user';
+
+import DrawerBtn from './components/DrawerBtn';
 
 const Profile = () => {
   const user = JSON.parse(localStorage.user)
@@ -10,25 +14,63 @@ const Profile = () => {
   const showModal = () => {
     setIsModalOpen(true);
   };
-
   const handleOk = () => {
     setIsModalOpen(false);
   };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
   const onChange = (key) => {
     console.log(key);
   };
+
+  // 渲染头像列表
+  function avatarRender() {
+    const list = [houTian, ali, face];
+    const names = ['后田花子', '阿里系', '脸萌'];
+    return names.map((a, indexA) => {
+      return {
+        label: a,
+        key: indexA,
+        children: <div>
+          {list[indexA].map((a, index) => {
+            return <img
+              key={index}
+              style={{ width: '100px', margin: 10 }}
+              onClick={() => changeAvatar(a)}
+              src={'http://xawn.f3322.net:8002/distremote/static/avatar/' + a}></img>
+          })}
+        </div>
+      }
+    })
+  }
+
+  // 切换头像
+  async function changeAvatar(imgUrl) {
+    const data = JSON.parse(localStorage.user)
+    await changeAvatarApi({ username: data.username, avatar: imgUrl })
+    message.success('修改成功')
+    setIsModalOpen(false);
+
+    // 修改本地
+    data.avatar = imgUrl
+    console.log('修改本地', data, imgUrl);
+    localStorage.setItem('user', JSON.stringify(data))
+    location.reload()
+  }
+
+
+  useEffect(() => {
+
+
+  }, [])
 
 
   return (
 
     <div style={{ padding: '30px' }}>
       <Card
-        title={<div>编辑资料</div>}
+        title={<DrawerBtn></DrawerBtn>}
         bordered={true}
         style={{
           width: '100%',
@@ -56,29 +98,13 @@ const Profile = () => {
               onOk={handleOk}
               onCancel={handleCancel}
               footer={null}
+              width={800}
             >
               {/* 头像列表切换 */}
               <Tabs
-
                 defaultActiveKey="1"
                 onChange={onChange}
-                items={[
-                  {
-                    label: `后田花子`,
-                    key: '1',
-                    children: `Content of Tab Pane 1`,
-                  },
-                  {
-                    label: `阿里系`,
-                    key: '2',
-                    children: `Content of Tab Pane 2`,
-                  },
-                  {
-                    label: `脸萌`,
-                    key: '3',
-                    children: `Content of Tab Pane 3`,
-                  },
-                ]}
+                items={avatarRender()}
               />
             </Modal>
           </Col>

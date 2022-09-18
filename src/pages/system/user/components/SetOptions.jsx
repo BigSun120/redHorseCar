@@ -1,17 +1,33 @@
-import { Button, Drawer, Space, Select, Radio, TreeSelect, Form, Input } from 'antd';
+import { Button, Drawer, Space, Select, Radio, TreeSelect, Form, Input, message } from 'antd';
 import React, { useState, useForm, useEffect } from 'react'
 
-import { getDeptApi } from '../../../../apis/dept';
-import { addUserApi } from '../../../../apis/usersMsg';
-import { getRoleApi } from '../../../../apis/role';
+// import { getUsersApi } from '../../../../apis/usersMsg';
 
-export default function DrawerBtn() {
+import { getDeptApi } from '../../../../apis/dept';
+import { changeUserApi } from '../../../../apis/usersMsg';
+import { getRoleApi } from '../../../../apis/role';
+import sets from '../../../../assets/images/icons/sets.png'
+import view from '../../../../assets/images/icons/view.png'
+
+export default function SetOptions(props) {
 
   const [dept, setDept] = useState({})
   const [role, setRole] = useState({})
   const [flg, setFlg] = useState(false)
 
+  const [form] = Form.useForm();
 
+  // 获取表单默认值
+  // useEffect(() => {
+  // console.log('userMsgprops', props.userMsg);
+  // }, [props.userMsg])
+  let { username, deptId, email, roleId, status, ssex, userId } = props.userMsg
+  deptId = String(deptId)
+  roleId = roleId.split(',')
+  //  更新本地 数据 
+  const dataLoc = JSON.parse(localStorage.user)
+
+  // console.log('email', email);
   // 获取部门
   async function getDept() {
     const data = await getDeptApi()
@@ -22,35 +38,45 @@ export default function DrawerBtn() {
     const data = await getRoleApi()
     setRole(data)
     setFlg(true)
-
   }
+  // //  获取 点击用户 信息
+  // (async function getUserMsgs() {
+  //   const data = await getUsersApi()
+  //   console.log('getUserMsgs', data);
+  // })()
 
   // 进入
   useEffect(() => {
     getDept()
     getRole()
-
   }, [])
 
   // console.log('部门', dept);
   // console.log('获取角色', role);
 
-
   // 抽屉
   const [open, setOpen] = useState(false);
 
-
   // 表单
-  const [form] = Form.useForm();
   // const form = Form.useFormInstance(); // x
   const onFinish = async (values) => {
-    console.log('Success:', values);
-    const data = await addUserApi(values)
-    console.log('onFinish-data', data);
+    // console.log('Success:', values);
+    const data = await changeUserApi(values)
+    console.log('SuccessSuccess', data);
+    console.log('formformformformform', form);
+    dataLoc.username = form.getFieldValue('username');
+    dataLoc.deptId = form.getFieldValue('deptId');
+    dataLoc.email = form.getFieldValue('email');
+    dataLoc.roleId = form.getFieldValue('roleId');
+    dataLoc.status = form.getFieldValue('status');
+    dataLoc.ssex = form.getFieldValue('ssex');
+    localStorage.setItem('user', JSON.stringify(dataLoc));// 更新本地数据
+    console.log('dataLocdataLoc', dataLoc);
     // form.resetFields();
+    message.success('修改成功')
   };
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    message.error('修改失败')
   };
 
   // 抽屉
@@ -66,7 +92,6 @@ export default function DrawerBtn() {
     form.submit();
     setOpen(false);
   };
-
   // 手机号
   // const prefixSelector = (
   //   <Form.Item name="prefix" noStyle>
@@ -84,16 +109,12 @@ export default function DrawerBtn() {
   return (
     <>
       <Space>
-        <Button
-          style={{ marginRight: 15 }}
-          type="primary"
-          onClick={showLargeDrawer}
-        >
-          新增用户
-        </Button>
+        <div onClick={showLargeDrawer}>
+          <img style={{ width: 20, marginRight: 5 }} src={sets} alt="" />
+        </div>
       </Space>
       <Drawer
-        title={'新增用户'}
+        title={'编辑资料'}
         placement="right"
         size='large'
         onClose={onClose}
@@ -102,7 +123,7 @@ export default function DrawerBtn() {
           <Space>
             <Button onClick={onClose}>取消</Button>
             <Button type="primary" onClick={onCloseAdd}>
-              新增
+              确认编辑
             </Button>
           </Space>
         }
@@ -115,7 +136,11 @@ export default function DrawerBtn() {
           name="basic"
           labelCol={{ span: 5, }}
           wrapperCol={{ span: 15, }}
-          initialValues={{ remember: true, size: 'large', }}
+          // 默认值
+          initialValues={{
+            remember: true, size: 'large',
+            deptId, username, email, userId, roleId, status, ssex,
+          }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -134,42 +159,21 @@ export default function DrawerBtn() {
           </Form.Item>
 
           <Form.Item
-            label="密码"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: '请输入密码！',
-              },
-            ]}
-          >
-            <Input.Password />
-          </Form.Item>
-
-          <Form.Item
             label="邮箱"
             name="email"
             value=''
-            rules={[{ type: 'email', message: '请输入正确的邮箱！', },]}
+            rules={[{ type: 'email', message: '请输入正确的邮箱！' }]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item
-            label="手机号"
-            name="mobile"
-            value=''
-            rules={[{
-              required: true,
-              type: /[0-9]/,
-              message: '请输入正确的手机好！',
-            },]}
+            label="用户Id"
+            name="userId"
           >
-            <Input
-              // addonBefore={prefixSelector}
-              style={{ width: '100%', }}
-            />
+            <Input disabled />
           </Form.Item>
+
 
           <Form.Item
             label="角色"
