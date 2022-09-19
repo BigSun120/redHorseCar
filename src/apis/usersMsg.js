@@ -1,5 +1,6 @@
 import { message } from "antd";
 import request from "../utils/request";
+import requestFile from "../utils/requestFile";
 
 // 获取用户数据
 export const getUsersApi = (query) => {
@@ -31,8 +32,6 @@ export const addUserApi = (body) => {
   return request('/user', {
     method: 'post',
     body
-    // data: 'username=qi123&password=123123&email=123@qq.com&mobile=12312312311&roleId=2&deptId=4&status=1&ssex=0'
-    // body: s
   })
 }
 
@@ -40,4 +39,20 @@ export const addUserApi = (body) => {
 export const delUserApi = (userId) => {
   message.success('假装删除成功')
   // return request(`/user/${userId}`, { method: 'delete' })
+}
+
+// 重置密码 user/password/reset usernames: qwe123
+export const resetPwdApi = (body) => {
+  return request('/user/password/reset', {
+    method: 'PUT',
+    body
+  })
+}
+
+// 下载excel表
+export const downloadExcelApi = (body) => {
+  return requestFile('/user/excel', {
+    method: 'POST',
+    body
+  })
 }

@@ -11,13 +11,6 @@ const NavPage = React.lazy(() => import('./pages/homePageView/HomePageView'))
 
 const App: FC = () => {
   function renderRoutes(routers: any[]) {
-
-    // const aaa = getRouters()
-    // console.log('aaa', aaa);
-
-    // getRouters().forEach(a => {
-    //   console.log(a);
-    // })
     return <>
       {
         routers.map(a => {

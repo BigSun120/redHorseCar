@@ -23,7 +23,7 @@ export default function SetOptions(props) {
   // }, [props.userMsg])
   let { username, deptId, email, roleId, status, ssex, userId } = props.userMsg
   deptId = String(deptId)
-  roleId = roleId.split(',')
+  roleId = roleId?.split(',')
   //  更新本地 数据 
   const dataLoc = JSON.parse(localStorage.user)
 
@@ -39,11 +39,7 @@ export default function SetOptions(props) {
     setRole(data)
     setFlg(true)
   }
-  // //  获取 点击用户 信息
-  // (async function getUserMsgs() {
-  //   const data = await getUsersApi()
-  //   console.log('getUserMsgs', data);
-  // })()
+
 
   // 进入
   useEffect(() => {

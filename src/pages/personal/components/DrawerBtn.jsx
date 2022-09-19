@@ -71,22 +71,9 @@ export default function DrawerBtn() {
     setOpen(false);
   };
 
-  // 手机号
-  // const prefixSelector = (
-  //   <Form.Item name="prefix" noStyle>
-  //     <Select
-  //       style={{
-  //         width: 70,
-  //       }}
-  //     >
-  //       <Option value="86">+86</Option>
-  //       <Option value="87">+87</Option>
-  //     </Select>
-  //   </Form.Item>
-  // );
-
   return (
     <>
+      <div>问题：本地数据需要转移到仓库，需要配置数据持久化</div>
       <Space>
         <Button
           style={{ marginRight: 15 }}
@@ -154,7 +141,6 @@ export default function DrawerBtn() {
           <Form.Item
             label="用户Id"
             name="userId"
-
           >
             <Input disabled />
           </Form.Item>
@@ -162,11 +148,10 @@ export default function DrawerBtn() {
           <Form.Item
             label="手机号"
             name="mobile"
-            value=''
             rules={[{
               required: true,
               type: /[0-9]/,
-              message: '请输入正确的手机好！',
+              message: '请输入正确的手机号！',
             },]}
           >
             <Input
@@ -175,7 +160,7 @@ export default function DrawerBtn() {
             />
           </Form.Item>
 
-          {/* <Form.Item
+          <Form.Item
             label="角色"
             name="roleId"
             rules={[
@@ -196,7 +181,7 @@ export default function DrawerBtn() {
                 </Select.Option>
               })}
             </Select>
-          </Form.Item> */}
+          </Form.Item>
 
           <Form.Item
             label="部门"
@@ -211,7 +196,7 @@ export default function DrawerBtn() {
             />
           </Form.Item>
 
-          {/* <Form.Item name="status" label="状态"
+          <Form.Item name="status" label="状态"
             rules={[{
               required: true,
               message: '请选择状态！',
@@ -220,7 +205,7 @@ export default function DrawerBtn() {
               <Radio value="1">有效</Radio>
               <Radio value="0">锁定</Radio>
             </Radio.Group>
-          </Form.Item> */}
+          </Form.Item>
 
 
           <Form.Item name="ssex" label="性别"
