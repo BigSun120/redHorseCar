@@ -42,7 +42,12 @@ const User = () => {
 
   const [List, setList] = useState([]);
   const [total, setTotal] = useState(0);
-  const [dept, setDept] = useState({}) // 部门 sear
+  const [dept, setDept] = useState({}) // 部门 sear  
+  const [showInp, setShowInp] = useState({
+    deptId: true,
+    username: true,
+    date: true
+  }) // 部门 deptShow
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);// 多选框 的 key 值
   const [selectedRowNames, setSelectedRowNames] = useState([]);// 多选框 的 key 值
   const [open, setOpen] = useState(false);  // 抽屉 
@@ -99,10 +104,13 @@ const User = () => {
   );
 
   // 接收子组件的数据
+  const [childVal, setChildVal] = useState([])
   const getChildSearch = (data) => {
-    console.log('getChildSearch', data);
+    // console.log('getChildSearch', data);
+    setChildVal(data)
     getList(data)
   }
+  console.log('setChildVal', childVal);
 
   // 获取部门 sear
   async function getDept() {
@@ -151,7 +159,6 @@ const User = () => {
     setSelectedRowNames(items)
     // console.log('selectedRowKeys changed:itemsitems ', a, items);
   };
-
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -162,7 +169,8 @@ const User = () => {
   // 真正的渲染
   async function getList(body = {}) {
     const { total, rows } = await getUsersApi(body);
-    // console.log('rowsrowsrows', rows);
+    const data = await getUsersApi(body);
+    console.log('rowsrowsrows', data);
     let list = rows.map(a => {
       // console.log(a.createTimeFrom);
       let o = {};
@@ -216,36 +224,49 @@ const User = () => {
     </div>
   }
 
-  // 切换页码
+  // 切换 页面
   const onChange = (pagination, filters, sorter, extra) => {
     // console.log('onChange-params', pagination, filters, sorter, extra);
     // console.log('123123312321qwwwwwwwww');
-    if (filters.statusName) {
-      getList({
-        pageNum: pagination.current,
-        status: filters.statusName[0],
-      })
-    }
-
-    if (filters.deptName) {
-      getList({
-        pageNum: pagination.current,
-        deptId: filters.deptName[0]
-      })
-    }
-
 
     if (filters.deptName && filters.statusName) {
       getList({
         pageNum: pagination.current,
-        deptId: filters.deptName[0],
-        status: filters.statusName[0],
+        deptId: filters.deptName,
+        status: filters.statusName,
+        ...childVal
       })
-    } else {
+      return
+    }
+    // else {
+    //   getList({
+    //     pageNum: pagination.current,
+    //     ...childVal
+    //   })
+    // }
+
+    if (filters.statusName) {
       getList({
         pageNum: pagination.current,
+        status: filters.statusName,
+        ...childVal
       })
+      return
     }
+
+    if (filters.deptName) {
+      console.log('filters.deptName', filters.deptName.join(','));
+      getList({
+        // pageNum: pagination.current,
+        deptId: filters.deptName.join(',')
+      })
+      return
+    }
+
+    getList({
+      pageNum: pagination.current,
+      ...childVal
+    })
   };
   // console.log('List:', List, 'total:', total);
 
@@ -359,7 +380,11 @@ const User = () => {
       </Modal>
 
       {/* 筛选 */}
-      <ToSearch getChildSearch={getChildSearch} onReset={onReset} />
+      <ToSearch
+        getChildSearch={getChildSearch}
+        onReset={onReset}
+        showInp={showInp}
+      />
       {/* <Form style={{ display: 'flex', flexWrap: 'wrap' }}
         name="control-hooks" onFinish={onFinish} form={form}>
         <Form.Item

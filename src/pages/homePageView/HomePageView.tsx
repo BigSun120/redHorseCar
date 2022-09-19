@@ -85,7 +85,7 @@ export default function HomePageView() {
   // 切换侧边栏
   async function asideRender() {
     const aa = await getRoutersAside()
-    console.log('aa', aa);
+    // console.log('aa', aa);
     setAside(aa)
   }
   function tagAside(e: any) {
