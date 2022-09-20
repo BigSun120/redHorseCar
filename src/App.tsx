@@ -27,7 +27,7 @@ const App: FC = () => {
   }
 
   return (
-    <React.Suspense fallback={<div>加载中...</div>}>
+    <React.Suspense fallback={< ></>}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to="login" />}></Route>

@@ -85,7 +85,7 @@ export default function HomePageView() {
   // 切换侧边栏
   async function asideRender() {
     const aa = await getRoutersAside()
-    // console.log('aa', aa);
+    console.log('aa', aa);
     setAside(aa)
   }
   function tagAside(e: any) {
@@ -121,6 +121,19 @@ export default function HomePageView() {
 
   // console.log(111111111, pathname, 2222, pathname.split('/')[1]);
 
+  // 去重
+  function objHeavy(arr: any) {
+    let newObj: any = {};
+    let newArr: any = [];
+    for (let i = 0; i < arr.length; i++) {
+      let item = arr[i]
+      if (!newObj[item.key]) {
+        newObj[item.key] = newArr.push(item)
+      }
+    }
+    return newArr
+  }
+
   return (
     <Layout className='vh100'>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -134,7 +147,8 @@ export default function HomePageView() {
           // openKeys={[pathname]}
           selectedKeys={[pathname]}
           // openKeys={['/' + pathname.split('/')[1]]}
-          items={aside}
+          // items={aside}
+          items={objHeavy(aside)}
           onClick={(e: any) => tagAside(e)}
         />
       </Sider>

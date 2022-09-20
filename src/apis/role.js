@@ -11,12 +11,12 @@ export const getRoleApi = (query) => {
 
 // 角色对应菜单
 export const getRoleMenuApi = (roleID) => {
-  return request(`role/menu/${roleID}`)
+  return request(`/role/menu/${roleID}`)
 }
 
 // 根据 ID 删除角色
 export const delRoleByIdApi = (roleID) => {
-  return request(`role/menu/${roleID}`, {
+  return request(`/role/${roleID}`, {
     method: 'delete'
   })
 }

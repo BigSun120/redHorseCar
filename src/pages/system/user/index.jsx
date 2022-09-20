@@ -255,10 +255,10 @@ const User = () => {
     }
 
     if (filters.deptName) {
-      console.log('filters.deptName', filters.deptName.join(','));
+      console.log('filters.deptName', filters.deptName);
       getList({
         // pageNum: pagination.current,
-        deptId: filters.deptName.join(',')
+        deptId: filters.deptName
       })
       return
     }

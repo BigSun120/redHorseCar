@@ -46,8 +46,8 @@ export default function request(url, options = {}) {
             }
         })
         .catch(err => {
-            console.log('接口错误： ', err);
-            console.dir(err)
+            // console.log('接口错误： ', err);
+            // console.dir(err)
             const msg = "Unexpected end of JSON input";
             if (err.message && err.message === msg) {//针对后端接口状态码200，但是没有任何内容返回的时候
                 return Promise.resolve();

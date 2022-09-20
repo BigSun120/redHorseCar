@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import ToSearch from '../../../components/ToSearch'
-import { Button, Table, Drawer, Space, Form, Input } from 'antd';
-import { getRoleApi, getAllRolesMenuApi } from '../../../apis/role'
+import { Button, Table, Drawer, Modal, Form, Input, message } from 'antd';
+import { getRoleApi, getAllRolesMenuApi, delRoleByIdApi } from '../../../apis/role'
 import type { DrawerProps } from 'antd/es/drawer';
+import { useComptime } from '../../../hooks/useComptime'; // 比较时间 大小
 
 import DrawerRole from './components/DrawerRole'
 
@@ -29,39 +30,53 @@ interface ListType {
   roleName?: string,
 }
 
-const columns: ColumnsType<ListType> = [
-  {
-    title: '角色',
-    dataIndex: 'roleName',
-  },
-  {
-    title: '描述',
-    dataIndex: 'remark',
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createTime',
-  },
-  {
-    title: '修改时间',
-    dataIndex: 'modifyTime',
-  },
-  {
-    title: '操作',
-    dataIndex: 'options',
-  },
-];
+
 
 export default function Role() {
-
   const { TextArea } = Input; // 文本框
   const [list, setList] = useState([])  // 列表数据
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);// 多选框的 keys 值
+  const [selectedRowKeys, setSelectedRowKeys] = useState<any>([]);// 多选框的 keys 值
+  const [selectedRowName, setSelectedRowName] = useState<any>([]);// 多选框的 keys 值
   const [open, setOpen] = useState<boolean | undefined>(false); // 设置--模态框 的开启状态
   const [openList, setopenList] = useState([]);// 设置--打开的 那一项的数据
   const [menus, setMenus] = useState();// 权限菜单
+  const [total, setTotal] = useState();// 列表数据总量
+  const [isModalOpen, setIsModalOpen] = useState(false);// 删除模态框
 
-  const [form] = Form.useForm();// 设置 -- 表单
+
+  function reload() {
+    console.log('刷新页面');
+    // location.reload()
+    getlist()
+  }
+
+  const columns: any = [
+    // const columns: ColumnsType<ListType> = [
+    {
+      title: '角色',
+      dataIndex: 'roleName',
+    },
+    {
+      title: '描述',
+      dataIndex: 'remark',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      // sorter: (a: any, b: any) => comptime(a.createTime, b.createTime)
+      sorter: (a: any, b: any) => useComptime(a.createTime, b.createTime)
+    },
+    {
+      title: '修改时间',
+      dataIndex: 'modifyTime',
+      sorter: (a: any, b: any) => useComptime(a.modifyTime, b.modifyTime)
+    },
+    {
+      title: '操作',
+      dataIndex: 'options',
+    },
+  ];
+  // const [form] = Form.useForm();// 设置 -- 表单
 
   // 获取权限菜单
   const getAllMenus = async () => {
@@ -87,28 +102,44 @@ export default function Role() {
   //   console.log('Failed:', errorInfo);
   // };
 
-  // 删除角色
+
+  // 多选框
+  const onSelectChange = (newSelectedRowKeys: React.Key[], items: any) => {
+    // console.log('selectedRowKeys changed: ', selectedRowKeys, selectedRowName);
+    let s: any = [];
+    items.map((a: any) => s.push(a.roleName))
+    setSelectedRowKeys(newSelectedRowKeys);
+    setSelectedRowName(s)
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    selectedRowName,
+    onChange: onSelectChange,
+  };
+  const hasSelected = selectedRowKeys.length > 0;
+
+  // 删除角色--弹出模态框
   const delRoles = () => {
-    console.log('delRoles');
+    console.log('delRoles', selectedRowKeys, selectedRowName);
+    setIsModalOpen(true);
+  };
+  // 删除 role--模态框
+  const handleOk = async () => {
+    setIsModalOpen(false);
+    const data = await delRoleByIdApi(selectedRowKeys)
+    console.log('handleOk', data);
+    message.success("删除成功！")
+    getlist()
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    message.info("取消删除！")
   };
 
   // 添加角色
   const addRole = () => {
     console.log('addRole');
   };
-
-
-  // 多选框
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-  const hasSelected = selectedRowKeys.length > 0;
-
 
   // 要展现的 input框
   const showInp = {
@@ -131,23 +162,19 @@ export default function Role() {
     }
   }
 
-  // 操作渲染
-  const optionsRender = (roleId: string, rows: any) => {
-    console.log('rowsrows', rows);
-    return <div onClick={(e) => optionsClick(e, roleId, rows)}>
-      <img data-type="set" data-roleid={roleId} src={sets} style={{ width: 20 }} alt="" />
-      <img data-type="view" data-roleid={roleId} src={view} style={{ width: 20 }} alt="" />
-    </div>
-  }
 
   // 获取数据
   const getlist = async (body?: any) => {
-    const { rows } = await getRoleApi(body);
+    // const { rows } = await getRoleApi(body);
+    const data = await getRoleApi(body);
+    setTotal(data.total)
+    // console.log('data', data);
+
     let o: any = [];
-    rows.map((a: any) => {
+    data.rows.map((a: any) => {
       o.push({
         ...a,
-        options: optionsRender(a.roleId, rows.filter((b: any) => b.roleId === a.roleId)),
+        options: optionsRender(a.roleId, data.rows.filter((b: any) => b.roleId === a.roleId)),
         key: String(a.roleId),
         roleId: String(a.roleId),
       })
@@ -166,7 +193,35 @@ export default function Role() {
   const onReset = () => {
     getlist()
   }
+  // 操作渲染
+  const optionsRender = (roleId: string, rows: any) => {
+    // console.log('rowsrows', rows);
+    return <div onClick={(e) => optionsClick(e, roleId, rows)}>
+      {menus &&
+        <DrawerRole
+          type='options'
+          menus={menus}
+          reload={reload}
+          options={{ roleId, sets, rows }} />
+      }
+      {menus &&
+        <DrawerRole
+          type='view'
+          menus={menus}
+          reload={reload}
+          view={{ roleId, view, rows }} />
+      }
+    </div>
+  }
 
+  // 表格换页
+  function onchange(a: any) {
+    // console.log(a);
+    getlist({
+      pageNum: a.current,
+      pageSize: a.pageSize
+    })
+  }
 
   // 初始化
   useEffect(() => {
@@ -174,11 +229,12 @@ export default function Role() {
     getAllMenus()
   }, [])
 
+  useEffect(() => {
+    getlist()
+  }, [menus])
+
   return (
     <div>
-
-      {/* 操作 -- 设置 */}
-      {/* <DrawerRole type={{ add: 'options' }} ></DrawerRole> */}
       {/* 搜索框 */}
       <ToSearch
         showInp={showInp}
@@ -186,48 +242,19 @@ export default function Role() {
         getChildSearch={getChildSearch}
       />
       {/* 设置--模态框 */}
-      {/* <Drawer
-        title='设置'
-        placement="right"
-        size='large'
-        onClose={onClose}
-        open={open}
-        extra={
-          <Space>
-            <Button onClick={onClose}>取消</Button>
-            <Button type="primary" onClick={upData}>
-              更新数据
-            </Button>
-          </Space>
-        }
-      >
-        <Form
-          name="wrap"
-          labelCol={{ flex: '110px' }}
-          labelAlign="left"
-          form={form}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          labelWrap
-          wrapperCol={{ flex: 1 }}
-          colon={false}
-        >
-          <Form.Item label="角色名称" name="roleId"  >
-            <Input />
-          </Form.Item>
+      <Modal title="确认删除以下用户？" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        {selectedRowName.map((a: any, index: number) => {
+          return <span key={index}>
+            {a}，
+          </span>
+        })}
+      </Modal>
 
-          <Form.Item label="角色描述" name="description" >
-            <TextArea rows={4} />
-          </Form.Item>
-
-        </Form>
-      </Drawer> */}
       <div>
         <div style={{ marginBottom: 16 }}>
           {/* 添加角色 */}
           {menus &&
-            <DrawerRole type={'add'} ></DrawerRole>
-            // <DrawerRole type={{ add: 'add' }} menus={menus}></DrawerRole>
+            <DrawerRole reload={reload} type={'add'} menus={menus}></DrawerRole>
           }
           <Button
             type="primary"
@@ -241,6 +268,10 @@ export default function Role() {
           rowSelection={rowSelection}
           columns={columns}
           dataSource={list}
+          onChange={onchange}
+          pagination={{
+            total
+          }}
         />
       </div>
     </div>

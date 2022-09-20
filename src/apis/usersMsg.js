@@ -37,8 +37,8 @@ export const addUserApi = (body) => {
 
 // 根据用户 ID 删除用户
 export const delUserApi = (userId) => {
-  message.success('假装删除成功')
-  // return request(`/user/${userId}`, { method: 'delete' })
+  // message.success('假装删除成功')
+  return request(`/user/${userId}`, { method: 'delete' })
 }
 
 // 重置密码 user/password/reset usernames: qwe123

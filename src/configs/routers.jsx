@@ -30,12 +30,6 @@ export const routers = [
   {
     path: '*',
     element: NotFound,
-    // children: [
-    //   {
-    //     path: '*',
-    //     element: NotFound,
-    //   }
-    // ]
   },
   {
     path: '/home',
@@ -85,15 +79,17 @@ export const routers = [
 
 // getRouters()
 
-// // 获取用户信息
+// 获取用户信息
 // export async function getUserMsg() {
 //   const { username } = JSON.parse(localStorage.user)
 //   const data = await routersApi(username);
 //   routers = data[0]
 //   // routers = data[0].children
-//   console.log('getRouters', routers);
+//   console.log('getRouters123123', routers);
 //   return routers
 // }
+// getUserMsg()
+
 
 export async function getRoutersAside() {
   const { username } = JSON.parse(localStorage.user)
