@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function changeUserMsg() {
+export default function ChangeUserMsg() {
   return (
     <div>changeUserMsg</div>
   )

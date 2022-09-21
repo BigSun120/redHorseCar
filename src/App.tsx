@@ -1,12 +1,12 @@
-import React, { useState, FC } from 'react'
+import React, { useState, FC, lazy } from 'react'
 import { BrowserRouter, HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './assets/styles/index.css'
 import { routers } from './configs/routers';
 
 
-const Login = React.lazy(() => import('./pages/Login'))
-const Reg = React.lazy(() => import('./pages/Reg'))
-const NavPage = React.lazy(() => import('./pages/homePageView/HomePageView'))
+const Login = lazy(() => import('./pages/Login'))
+const Reg = lazy(() => import('./pages/Reg'))
+const NavPage = lazy(() => import('./pages/homePageView/HomePageView'))
 // const User = React.lazy(() => import('./pages/system/user'))
 
 const App: FC = () => {
@@ -27,12 +27,12 @@ const App: FC = () => {
   }
 
   return (
-    <React.Suspense fallback={< ></>}>
+    <React.Suspense fallback={<h1>loading......</h1>}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="login" />}></Route>
+          {/* <Route path="/" element={<Navigate to="login" />}></Route>
           <Route path="/login" element={<Login />} />
-          <Route path="/reg" element={<Reg />} />
+          <Route path="/reg" element={<Reg />} /> */}
           {
             renderRoutes(routers)
           }

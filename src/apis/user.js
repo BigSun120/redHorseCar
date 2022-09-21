@@ -24,6 +24,11 @@ export const getUserMsg = () => {
   return request(`/user`)
 }
 
+// by Id
+export const getUserMsgById = (query) => {
+  return request(`/user/${query}`)
+}
+
 //  切换头像
 export const changeAvatarApi = (body) => {
   return request('/user/avatar', {

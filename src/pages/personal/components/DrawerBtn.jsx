@@ -1,11 +1,19 @@
 import { Button, Drawer, Space, Select, Radio, TreeSelect, Form, Input } from 'antd';
 import React, { useState, useForm, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getDeptApi } from '../../../apis/dept';
 import { changeUserApi } from '../../../apis/usersMsg';
 import { getRoleApi } from '../../../apis/role';
 
+// import * as userStoreFn from '../../../store/modules/user'
+
+
 export default function DrawerBtn() {
+  // store 状态机
+  // const userState = useSelector(state => state.user.userList)
+  // const dispatch = useDispatch();
+  // dispatch(userStoreFn.getUserMsgByIdAsync('123'))
 
   const [dept, setDept] = useState({})
   const [role, setRole] = useState({})
@@ -73,7 +81,6 @@ export default function DrawerBtn() {
 
   return (
     <>
-      <div>问题：本地数据需要转移到仓库，需要配置数据持久化</div>
       <Space>
         <Button
           style={{ marginRight: 15 }}

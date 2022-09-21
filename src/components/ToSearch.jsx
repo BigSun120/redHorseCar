@@ -8,6 +8,7 @@ import { getDeptApi } from '../apis/dept';
 /**
  *  接收参数说明：
  *  1. showInp （对象） ：要显示的 输入框
+ *       const showInp = { role: true }
  *  2. getChildSearch （函数） ： 子传父 （输入框的值）
  *  3. onReset （函数） ： 重置 form (父 重新渲染即可)
  * **/
@@ -37,7 +38,7 @@ export default function ToSearch(props) {
   // 获取部门
   async function getDept() {
     const data = await getDeptApi()
-    console.log('getDept()', data);
+    // console.log('getDept()', data);
     setDept(data)
   }
 
@@ -67,6 +68,11 @@ export default function ToSearch(props) {
 
         {props.showInp?.deptId && <Form.Item label="部门" name="deptId">
           <TreeSelect placeholder="请选择部门！" treeData={dept.rows?.children} />
+        </Form.Item>}
+
+
+        {props.showInp?.userMenu && <Form.Item name="menuName" label="菜单名">
+          <Input style={{ width: 200 }} placeholder="请输入菜单名" />
         </Form.Item>}
 
         {props.showInp?.date && <Form.Item name="createTimeFromTwo" label="创建时间"  >

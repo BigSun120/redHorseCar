@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 const baseUrl = "http://xawn.f3322.net:8012"
 
 export default function request(url, options = {}) {
@@ -6,6 +6,7 @@ export default function request(url, options = {}) {
         let body = options.body || {};
         let s = ""
         Object.keys(body).forEach(key => {
+
             if (body[key] === undefined || body[key] === "") return;
             s += `${key}=${body[key]}&`
         })
@@ -49,8 +50,15 @@ export default function request(url, options = {}) {
             // console.log('接口错误： ', err);
             // console.dir(err)
             const msg = "Unexpected end of JSON input";
-            if (err.message && err.message === msg) {//针对后端接口状态码200，但是没有任何内容返回的时候
+            //针对后端接口状态码200，但是没有任何内容返回的时候
+            if (err.message && err.message === msg) {
+                message.success('请求成功！')
                 return Promise.resolve();
+            } else {
+                notification.open({
+                    message: '错误信息提示！',
+                    description: `${err}`,
+                });
             }
             return Promise.reject(err);
         })

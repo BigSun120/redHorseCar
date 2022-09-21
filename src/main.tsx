@@ -5,7 +5,10 @@ import zhCN from 'antd/es/locale/zh_CN';
 import { ConfigProvider } from 'antd';
 import { store } from './store/index'
 import { Provider } from 'react-redux'
+// import { Api } from './apis'
 
+// React.Api = Api
+// console.log('ReactReact', React);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   // <React.StrictMode>

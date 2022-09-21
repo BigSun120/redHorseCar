@@ -34,7 +34,6 @@ const DrawerRole = (props: any) => {
     setValue(newValue.join(','));
     console.log('onChange--newValue ', newValue);
   };
-
   const tProps = {
     treeData: menus,
     value,
@@ -67,6 +66,7 @@ const DrawerRole = (props: any) => {
       setTimeout(() => { props.reload() }, 500)
       message.success('成功新增！')
       form.resetFields()
+      // const data = await addRoleApi(values);console.log('addRoleApi:', data);
     }
 
     // 修改 角色
@@ -76,7 +76,6 @@ const DrawerRole = (props: any) => {
       message.success('修改成功！')
     }
 
-    form.resetFields();
     console.log('Success:', values);
     onClose()
   };
