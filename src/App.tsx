@@ -27,6 +27,7 @@ const App: FC = () => {
   }
 
   return (
+    // <React.Suspense fallback={<div style={{ opacity: 0 }}></div>}>
     <React.Suspense fallback={<h1>loading......</h1>}>
       <BrowserRouter>
         <Routes>
@@ -38,7 +39,7 @@ const App: FC = () => {
           }
         </Routes>
       </BrowserRouter>
-    </React.Suspense>
+    </React.Suspense >
   )
 }
 export default App

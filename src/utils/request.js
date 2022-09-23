@@ -42,6 +42,12 @@ export default function request(url, options = {}) {
                     window.location.pathname = "/login";
                     // window.localStorage.hash = "#/login";
                     break;
+                case 500:
+                    notification.open({
+                        message: '错误信息提示！',
+                        description: `500错误`,
+                    });
+                    break;
                 default:
                     return response.json()
             }

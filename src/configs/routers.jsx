@@ -22,6 +22,7 @@ import User from '../pages/system/user';//system/user/User
 import Role from '../pages/system/role';
 import Menu from '../pages/system/menu';
 import Dict from '../pages/system/dict';
+import Dept from '../pages/system/dept';
 import Profile from '../pages/personal/Profile';
 
 let R = []
@@ -77,6 +78,9 @@ export let routers = [
       {
         path: 'dict',
         element: Dict
+      }, {
+        path: 'dept',
+        element: Dept
       },
     ]
   },
