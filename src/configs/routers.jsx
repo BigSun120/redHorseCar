@@ -11,7 +11,6 @@ const NavPage = React.lazy(() => import('../pages/homePageView/HomePageView'))
 const Home = React.lazy(() => import('../pages/home/Home'))
 const NotFound = React.lazy(() => import('../pages/NotFound'))
 
-
 // const User = React.lazy(() => import('../pages/system/user'))
 // const Role = React.lazy(() => import('../pages/system/role'))
 
@@ -24,6 +23,8 @@ import Menu from '../pages/system/menu';
 import Dict from '../pages/system/dict';
 import Dept from '../pages/system/dept';
 import Profile from '../pages/personal/Profile';
+
+import Online from '../pages/monitor/online';
 
 let R = []
 
@@ -82,6 +83,17 @@ export let routers = [
         path: 'dept',
         element: Dept
       },
+    ]
+  },
+  {
+    path: '/monitor',
+    element: NavPage,
+    children: [
+      {
+        path: 'online',
+        index: true,
+        element: Online
+      }
     ]
   },
   {

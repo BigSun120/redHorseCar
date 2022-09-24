@@ -5,9 +5,9 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Col, Row, Dropdown, message, Space, Breadcrumb, Card } from 'antd';
-import type { MenuProps } from 'antd';
-import React, { useEffect, useState, } from 'react';
+import { Layout, Menu, Button, Tabs, Row, Dropdown, message, Space, Breadcrumb, Card } from 'antd';
+// import type { MenuProps } from 'antd';
+import React, { useEffect, useState, useRef } from 'react';
 import { getRoutersAside } from '../../configs/routers';
 import { useNavigate, Outlet, NavLink } from 'react-router-dom';
 import { useLocation } from 'react-router';
@@ -25,13 +25,13 @@ export default function HomePageView() {
   const [collapsed, setCollapsed] = useState(false);
   const [aside, setAside] = useState([])
 
-  const { pathname, hash } = useLocation()
+  let { pathname, hash } = useLocation()
 
   // 本地用户信息
   const { username, avatar, deptName, roleName, lastLoginTime } = JSON.parse(localStorage.user)
 
   // 用户名字处下拉框
-  const onClickUserMsg: MenuProps['onClick'] = ({ key }) => {
+  const onClickUserMsg = ({ key }) => {
     switch (key) {
       // 退出登录
       case '4':
@@ -74,7 +74,7 @@ export default function HomePageView() {
 
 
   // 获取状态机 中的 用户信息
-  // const name = useSelector((state: any) => state.user)
+  // const name = useSelector((state ) => state.user)
   // user.getUserMsgAsync()()
 
   useEffect(() => {
@@ -83,28 +83,69 @@ export default function HomePageView() {
   }, [])
 
   // 切换侧边栏
+  const [allAside, setAllAside] = useState()
   async function asideRender() {
     const aa = await getRoutersAside()
     // console.log('aa', aa);
     setAside(aa)
+    setAllAside(objHeavy(aa))
+
+    console.log('arr.children', arr?.children, a);
+    // setInitialItems(aa)
   }
-  function tagAside(e: any) {
+  function toFind(arr, e) {
+    // console.log('setAllAside(objHeavy(aa))', allAside);
+    return arr.filter(a => {
+      if (a.children) {
+        return toFind(a.children, e)
+      }
+      return a.key === e.key
+    })
+
+  }
+  function tagAside(e) {
     console.log('tagAside', e);
     navigate(e.key)
     showBread()
+    add(e)
+    setItems([
+      ...items,
+      // ...toFind(allAside, e)
+    ])
+    console.log('toFind(allAside, e)', e.key, toFind(allAside, e));
   }
 
+  // tabs
+  const [activeKey, setActiveKey] = useState()
+  const [items, setItems] = useState([])
+  function onChange(a, b) {
+    console.log('onChange', a, b);
+  }
+  function onEdit(a, b) {
+    console.log('onEdit', a, b);
+  }
+  function add(a) {
+    console.log('add', a);
+    setItems([
+      ...items,
+      {
+        label: breadcrumbs
+      }
+    ])
+  }
+
+
   // 面包削动态渲染
-  function showBread(key: string = pathname) {
+  function showBread(key = pathname) {
     // 面包削动态渲染
     console.log('pathname', key, breadcrumbs);
-    return Object.keys(breadcrumbs).map((a: any) => {
+    return Object.keys(breadcrumbs).map((a) => {
       if (a === key) {
 
         if (breadcrumbs[a].length > 1) {
           console.log('breadcrumbs[a]', breadcrumbs[a]);
           return <Breadcrumb>
-            {breadcrumbs[a].map((b: any) => {
+            {breadcrumbs[a].map((b) => {
               return <Breadcrumb.Item key={b.title}>
                 {b.title}
               </Breadcrumb.Item>
@@ -122,9 +163,9 @@ export default function HomePageView() {
   // console.log(111111111, pathname, 2222, pathname.split('/')[1]);
 
   // 去重
-  function objHeavy(arr: any) {
-    let newObj: any = {};
-    let newArr: any = [];
+  function objHeavy(arr) {
+    let newObj = {};
+    let newArr = [];
     for (let i = 0; i < arr.length; i++) {
       let item = arr[i]
       if (!newObj[item.key]) {
@@ -149,7 +190,7 @@ export default function HomePageView() {
           // openKeys={['/' + pathname.split('/')[1]]}
           // items={aside}
           items={objHeavy(aside)}
-          onClick={(e: any) => tagAside(e)}
+          onClick={(e) => tagAside(e)}
         />
       </Sider>
       <Layout className="site-layout">
@@ -162,6 +203,7 @@ export default function HomePageView() {
             onClick: () => setCollapsed(!collapsed),
           })}
           <div>
+
 
             <Dropdown overlay={menu}>
               <a
@@ -187,12 +229,12 @@ export default function HomePageView() {
           }}
         >
           {/* 面包屑 */}
-          {Object.keys(breadcrumbs).map((a: any) => {
+          {Object.keys(breadcrumbs).map((a) => {
             if (a === pathname) {
               if (breadcrumbs[a].length > 1) {
                 // console.log('breadcrumbs[a]', breadcrumbs[a]);
                 return <Breadcrumb key={a}>
-                  {breadcrumbs[a].map((b: any) => {
+                  {breadcrumbs[a].map((b) => {
                     return <Breadcrumb.Item key={b.title}>
                       <NavLink to={b.link}>{b.title}</NavLink>
                     </Breadcrumb.Item>
@@ -201,7 +243,18 @@ export default function HomePageView() {
               }
             }
           })}
+          {/* tabs */}
+          <div>
 
+            <Tabs
+              hideAdd
+              onChange={onChange}
+              activeKey={activeKey}
+              type="editable-card"
+              onEdit={onEdit}
+              items={items}
+            />
+          </div>
           {/* 路由出口 */}
           <Outlet></Outlet>
         </Content>
