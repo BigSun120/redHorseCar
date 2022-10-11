@@ -56,16 +56,6 @@ export default function UserMenu() {
   async function getAllMenus(body) {
     const data = await getMenuApi(body)
     console.log('getAllMenus', data);//.map(a => a.value = a.id)
-    // let o = []
-    // addVal(data.rows.children)
-    // data.rows.children.map(a => {
-    //   // console.log(a);
-    //   o.push({
-    //     ...a,
-    //     key: String(a.id),
-    //     value: String(a.id),
-    //   })
-    // })
     setList(addVal(data.rows.children))
     // setList(o)
   }

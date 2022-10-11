@@ -44,6 +44,7 @@ export let routers = [
   {
     path: '/',
     element: NavPage,
+    children: [{ path: '/', element: Home, }]
   },
   {
     path: '*',

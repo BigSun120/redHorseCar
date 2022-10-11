@@ -5,7 +5,7 @@ import setImg from '../../assets/images/icons/sets.png'
 
 
 
-/**
+/** 
  * 接收的参数
  *  1. usealAdd (input遍历项)（数组对象） ：
  *      [{label: '键', name: 'keyy', rules: true},]
@@ -42,14 +42,17 @@ export default function BigPageAdd(props) {
     console.log('Success:', values);
     if (props.type === 'add') {
       props.addApi(values)
+      props?.addDeptApi(values)
       props.getList()
       setOpen(false);
     }
     if (props.type === 'set') {
       props.changeApi(values)
+      // console.log(12112, props.getList);
       props.getList()
       setOpen(false);
     }
+    // onClose()
   };
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);

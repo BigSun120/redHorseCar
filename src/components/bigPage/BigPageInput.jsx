@@ -64,7 +64,7 @@ export default function BigPage(props) {
 
         {props.usualInput &&
           Object.keys(props.usualInput).map(a => {
-            console.log(a);
+            // console.log(a);
             return <Form.Item
               style={{ lineHeight: '30px' }}
               name={a}

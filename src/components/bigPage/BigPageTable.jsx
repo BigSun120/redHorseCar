@@ -19,7 +19,7 @@ export default function BigPageTable(props) {
   // 多选框
   const onSelectChange = (newSelectedRowKeys, b) => {
     let arr = [];
-    b.map(a => arr.push(a.title))
+    b.map(a => arr.push(a))
     setSelectedRowKeys(newSelectedRowKeys);
     setSelectedName(arr);
     props.changeSelVal(newSelectedRowKeys, arr)

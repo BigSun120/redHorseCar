@@ -28,7 +28,7 @@ export default function HomePageView() {
   let { pathname, hash } = useLocation()
 
   // 本地用户信息
-  const { username, avatar, deptName, roleName, lastLoginTime } = JSON.parse(localStorage.user)
+  const { username, avatar, deptName, roleName, lastLoginTime } = JSON.parse(localStorage?.user)
 
   // 用户名字处下拉框
   const onClickUserMsg = ({ key }) => {

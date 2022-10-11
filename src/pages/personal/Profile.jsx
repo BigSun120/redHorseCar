@@ -112,7 +112,7 @@ const Profile = () => {
             <ul >
               <li>账户：{user.username}</li>
               <li>角色：{user.roleName}</li>
-              <li>性别：{user.ssex}</li>
+              <li>性别：{user.ssex == '0' ? '男' : user.ssex == '1' ? '女' : '保密'}</li>
               <li>电话：{user.mobile}</li>
               <li>邮箱：{user.email}</li>
               <li>部门：{user.deptName}</li>

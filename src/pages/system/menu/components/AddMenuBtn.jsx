@@ -36,11 +36,11 @@ export default function AddMenuBtn(props) {
   const onClose = () => {
     console.log('onClose');
     setTypeAdd('')
-    setOpen(false);
     setTypeAdd(null)
     setTypeMenuChange(null);
     form.resetFields();
     props.reloadList()
+    setOpen(false);
   };
 
   // 菜单-设置 打开
@@ -84,16 +84,13 @@ export default function AddMenuBtn(props) {
       const data = await addMenuApi(values)
       console.log('000', data);
     }
-    // if (typeAdd === '1') {
-    //   const data = await addMenuApi(values)
-    //   console.log('111', data);
-    // }
-    // // 修改
-    if (props.menuItems.type === '0' || props.menuItems.type === '1') {
+    // 修改
+    if (props.menuItems?.type === '0' || props.menuItems?.type === '1') {
       console.log('asdasd');
       const data = await changeMenuApi(values);
       console.log('菜单修改：', data);
     }
+
     onClose()
   }
   const onFinishFailed = (errorInfo) => {
@@ -274,5 +271,5 @@ export default function AddMenuBtn(props) {
       </Drawer>
 
     </>
-    )
-  }
+  )
+}

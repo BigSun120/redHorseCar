@@ -12,6 +12,7 @@ import setImg from '../../../assets/images/icons/sets.png'
 
 export default function Dict() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);// 多选框
+  const [selectedRowNames, setSelectedRowNames] = useState([]);// 多选框
   const [isModalOpen, setIsModalOpen] = useState(false);// 删除 对话框
   const [list, setList] = useState([])// 存储 修改后的 table 列表数据
   const [total, setTotal] = useState('0')// 总数
@@ -65,13 +66,15 @@ export default function Dict() {
   // 搜索
   function getChildSearch(val) {
     console.log('getChildSearch--dict', val);
+    getList(val)
   }
 
 
   // 改变多选框的 值 (子改变)
-  function changeSelVal(val) {
-    console.log('changeSelVal', val);
+  function changeSelVal(val, b) {
+    console.log('changeSelVal', val, b);
     setSelectedRowKeys(val)
+    setSelectedRowNames(b)
   }
 
   // 点击删除打开 对话框
@@ -80,7 +83,8 @@ export default function Dict() {
   }
   // 对话框 两按钮  
   const handleOk = () => {
-    console.log('handleOk', selectedRowKeys);
+    console.log('handleOk', selectedRowKeys, selectedRowNames);
+
     setIsModalOpen(false);
   };
   const handleCancel = () => {
@@ -164,9 +168,9 @@ export default function Dict() {
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}>
-          {selectedRowKeys.map((a, index) => {
+          {selectedRowNames.map((a, index) => {
             return <span key={index}>
-              {a}；
+              {a.value}；
             </span>
           })}
         </Modal>

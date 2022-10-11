@@ -25,39 +25,61 @@ export default function Dept() {
   // const childRef = React.forwardRef(() => { })
   // 新增框
   const usealAdd = [
-    { label: '部门名称', name: 'title', rules: true },
-    { label: '排序', name: 'order', },
+    { label: '部门名称', name: 'deptName', rules: true },
+    { label: '排序', name: 'orderNum', },
+    { label: 'deptId', name: 'deptId', disabled: true },
   ]
   const unUsalAdd = [
     { label: 'parentId', name: 'tableName', }
   ]
 
+
+  // 添加属性
+  function add(rows) {
+    if (rows) {
+      rows.map((a, index) => {
+        rows[index] = {
+          ...a,
+          deptId: a.id,
+          deptName: a.title,
+          orderNum: String(a.order),
+        }
+        if (a.hasChildren) {
+          add(a.children)
+        }
+      })
+    }
+    return rows
+  }
+
   // 获取列表基础数据
   async function getList(body) {
     const data = await getDeptApi(body)
-    console.log('getList', data);
+    // console.log('getList', data);
+    let rows = data.rows.children;
     setTotal(data.total)
     // 处理返回的 数据
-    let o = [];
-    if (data) {
-      data.rows.children.map(a => {
-        o.push({
-          ...a,
-        })
-      })
-    }
-    setList(o)
+    setList(add(rows))
+    console.log('list', list);
   }
-  console.log('list', list);
+  // console.log('list', list);
   // 新增
-  function getChildAdd(val) {
-    console.log('getChildAdd--dict', val);
-    addDeptApi(val)
+  async function getChildAdd(val) {
+    console.log('getChildAdd--dept', val);
+    await addDeptApi(val)
+    getList()
+  }
+  // 改变
+  async function changeApi(val) {
+    console.log('changeApi--dept', val);
+    await changeDeptApi(val)
+    getList()
   }
 
   // 搜索
   function getChildSearch(val) {
-    console.log('getChildSearch--dict', val);
+    console.log('getChildSearch--dept', val);
+    getList(val)
   }
 
 
@@ -76,6 +98,7 @@ export default function Dept() {
   // 对话框 两按钮  
   const handleOk = () => {
     console.log('handleOk', selectedRowKeys);
+    getList()
     setIsModalOpen(false);
   };
   const handleCancel = () => {
@@ -112,10 +135,10 @@ export default function Dept() {
       fixed: 'right',
       dataIndex: 'options',
       render: (a, items) => {
-        console.log('items', items);
+        // console.log('items', items);
         return <BigPageAdd
           getList={getList}
-          changeApi={changeDeptApi}
+          changeApi={changeApi}
           usealAdd={usealAdd}
           unUsalAdd={unUsalAdd}
           list={list}
@@ -131,6 +154,11 @@ export default function Dept() {
     getList()
   }, [])
 
+  // 重置
+  function onReset() {
+    getList()
+  }
+
   // 页码改变
   const onchange = (a) => {
     console.log('onchange');
@@ -144,7 +172,7 @@ export default function Dept() {
     <>
       <div>
         {/* 搜索框 */}
-        <BigPage usualInput={usealInput} getChildSearch={getChildSearch} />
+        <BigPage onReset={onReset} usualInput={usealInput} getChildSearch={getChildSearch} />
       </div>
       <div style={{ display: 'flex' }}>
 
@@ -160,13 +188,13 @@ export default function Dept() {
         />
 
         {/* 删除 */}
-        <Button
+        {/* <Button
           style={{ margin: '0 15px' }}
           onClick={delSelVal}
           disabled={selectedRowKeys.length > 0 ? false : true}
         >
           删除
-        </Button>
+        </Button> */}
 
         {/* 删除对话框 */}
         <Modal

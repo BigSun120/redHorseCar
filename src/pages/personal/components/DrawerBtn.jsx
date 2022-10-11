@@ -41,23 +41,19 @@ export default function DrawerBtn() {
   useEffect(() => {
     getDept()
     getRole()
-
   }, [])
-
-  // console.log('部门', dept);
-  // console.log('获取角色', role);
-
-
   // 抽屉
   const [open, setOpen] = useState(false);
-
 
   // 表单
   // const form = Form.useFormInstance(); // x
   const onFinish = async (values) => {
     console.log('Success:', values);
+    localStorage.user = JSON.stringify({ ...userMsgs, ...values })
     const data = await changeUserApi(values)
+    location.reload()
     console.log('onFinish-data', data);
+
     // form.resetFields();
   };
   const onFinishFailed = (errorInfo) => {
