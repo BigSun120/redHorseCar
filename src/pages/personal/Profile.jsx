@@ -8,7 +8,8 @@ import { changeAvatarApi } from '../../apis/user';
 import DrawerBtn from './components/DrawerBtn';
 
 const Profile = () => {
-  const user = JSON.parse(localStorage.user)
+
+  const user = JSON.parse(localStorage.user || '{}')
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -47,7 +48,7 @@ const Profile = () => {
 
   // 切换头像
   async function changeAvatar(imgUrl) {
-    const data = JSON.parse(localStorage.user)
+    const data = JSON.parse(localStorage.user || '{}')
     await changeAvatarApi({ username: data.username, avatar: imgUrl })
     message.success('修改成功')
     setIsModalOpen(false);

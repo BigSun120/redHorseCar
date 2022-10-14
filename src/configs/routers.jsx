@@ -159,12 +159,12 @@ export let routers = [
 // 根据 用户名 生成路由
 
 export async function getRoutersAside() {
-  const { username } = JSON.parse(localStorage.user)
+  const { username } = JSON.parse(localStorage.user || '{}')
   const data = await routersApi(username);
   // routers = data[0].children
   // console.log('getRoutersAside', data[0].children);
   // console.log('getRoutersAside------data', data[0].children);
-  const arr = JSON.parse(JSON.stringify(data[0].children));
+  const arr = JSON.parse(JSON.stringify(data[0].children) || '{}');
   // console.log('arr', arr);
   return formatMenus(arr)
 }

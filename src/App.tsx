@@ -29,7 +29,7 @@ const App: FC = () => {
   return (
     // <React.Suspense fallback={<div style={{ opacity: 0 }}></div>}>
     <React.Suspense fallback={<h1>loading......</h1>}>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           {/* <Route path="/" element={<Navigate to="login" />}></Route>
           <Route path="/login" element={<Login />} />
@@ -38,7 +38,7 @@ const App: FC = () => {
             renderRoutes(routers)
           }
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </React.Suspense >
   )
 }
